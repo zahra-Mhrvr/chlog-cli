@@ -29,6 +29,14 @@ def preview(repo, since, version_label):
 @click.option("--prepend", is_flag=True, help="Prepend to an existing changelog instead of overwriting it")
 def generate(repo, since, version_label, output, prepend):
     """Write the generated changelog to a file."""
+    if prepend and not since:
+        click.echo(
+            "note: --prepend without --since re-includes your whole history "
+            "as this entry. Pass --since <last-tag> to only include commits "
+            "since your last release.",
+            err=True,
+        )
+
     commits = get_commits(repo, since=since)
     new_content = build_changelog(commits, version=version_label)
 
